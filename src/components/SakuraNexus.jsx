@@ -292,7 +292,6 @@ const SakuraNexus = ({ onExit, message }) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: signatureDelay }}
               >
-                Forever Yours,
               </motion.tspan>
             </text>
 
