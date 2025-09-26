@@ -1,100 +1,144 @@
 import React, { useState } from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Keyframes for the intense data glitching effect
-const glitchEffect = keyframes`
-  0% { text-shadow: 0.05em 0 0 #00FFFF, -0.05em 0 0 #F400F4; clip-path: inset(0 0 0 0); }
-  5% { clip-path: inset(0.5em 0 0.2em 0); }
-  10% { clip-path: inset(0.8em 0 0.4em 0); }
-  // ... (add more steps for a more complex glitch)
-  100% { text-shadow: 0.05em 0 0 #00FFFF, -0.05em 0 0 #F400F4; clip-path: inset(0 0 0 0); }
-`;
+// --- Styled Components with Responsive Media Queries ---
 
-const FragmentWrapper = styled(motion.div)`
+// The main wrapper for positioning the magical element.
+// ✅ It now scales down on smaller screens to fit the mobile layout.
+const WhisperWrapper = styled(motion.div)`
   position: absolute;
   top: ${({ top }) => top || 'auto'};
   left: ${({ left }) => left || 'auto'};
   right: ${({ right }) => right || 'auto'};
   bottom: ${({ bottom }) => bottom || 'auto'};
   cursor: pointer;
-  font-family: ${({ theme }) => theme.fonts.secondary};
-  color: ${({ theme }) => theme.colors.text};
+  display: flex;
+  align-items: center;
+  gap: 0.8rem; // Space between the orb and the text
   -webkit-font-smoothing: antialiased;
+
+  /* On mobile, we scale the entire element down slightly. */
+  @media (max-width: 768px) {
+    transform: scale(0.9);
+    transform-origin: left center; // Ensures it scales from its starting point
+  }
 `;
 
-const GlitchedText = styled(motion.p)`
-  font-size: 1.2rem;
-  animation: ${glitchEffect} 1.5s infinite linear;
-  color: ${({ theme }) => theme.colors.glowCyan};
+// The glowing orb of magic. No changes needed here as the parent scales it.
+const MagicOrb = styled(motion.div)`
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFFFFF, #FFC0CB);
+  box-shadow: 0 0 10px #FFB6C1, 0 0 20px #FF69B4;
 `;
 
-const RevealedText = styled(motion.p)`
-  font-size: 1.2rem;
+// The text that magically appears next to the orb on hover.
+const HoverPrompt = styled(motion.p)`
+  font-size: 1rem;
+  font-family: ${({ theme }) => theme.fonts.secondary || 'cursive'};
+  color: ${({ theme }) => theme.colors.primaryPink || '#FFB6C1'};
+  text-shadow: 0 0 5px #FFF;
+  white-space: nowrap; // Prevents the text from wrapping
+`;
+
+// The revealed secret message, with a responsive font size.
+const SecretMessage = styled(motion.p)`
+  font-family: ${({ theme }) => theme.fonts.secondary || "'Great Vibes', cursive"};
+  font-size: 1.5rem; 
   letter-spacing: 1px;
-  color: ${({ theme }) => theme.colors.primaryPink};
-  text-shadow: 0 0 8px ${({ theme }) => theme.colors.primaryPink};
+  color: ${({ theme }) => theme.colors.primaryPink || '#FF69B4'};
+  text-shadow: 0 0 8px ${({ theme }) => theme.colors.primaryPink || '#FF69B4'};
+  white-space: nowrap;
+
+  /* ✅ Make the revealed text slightly smaller on mobile for a better fit. */
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
+  }
 `;
+
+// --- The Main Component ---
 
 const DataFragment = ({ children, top, left, right, bottom }) => {
   const [isDecrypted, setIsDecrypted] = useState(false);
 
-  // The poem line split into individual characters for the typing animation
-  const poemChars = Array.from(children);
+  const handleReveal = () => setIsDecrypted(true);
 
-  // Animation variants for the container of the revealed text
+  const messageChars = Array.from(children);
+
+  // Animation variants remain the same, they scale with the parent.
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05, // Time delay between each character appearing
+        staggerChildren: 0.04,
         delayChildren: 0.2,
       },
     },
   };
 
-  // Animation variants for each individual character
   const charVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, y: 20, scale: 0.5 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: 'spring', damping: 12, stiffness: 100 },
+    },
+  };
+
+  const promptVariants = {
+    initial: { opacity: 0, x: -10 },
+    hover: { opacity: 1, x: 0 },
   };
 
   return (
-    <FragmentWrapper
+    <WhisperWrapper
       top={top}
       left={left}
       right={right}
       bottom={bottom}
-      onClick={() => setIsDecrypted(true)}
-      whileHover={{ scale: 1.1 }}
+      onClick={handleReveal}
+      onTouchStart={handleReveal} // ✅ Added for better mobile touch support
+      initial="initial"
+      whileHover="hover" // Note: `whileHover` is ignored on touch devices. The tap/click will still work.
     >
       <AnimatePresence>
         {!isDecrypted ? (
-          <GlitchedText
-            key="glitch"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.3 } }}
+          <motion.div
+            key="enchanted-prompt"
+            exit={{ opacity: 0, scale: 0, transition: { duration: 0.4 } }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}
           >
-            Click on me
-          </GlitchedText>
+            <MagicOrb
+              animate={{
+                scale: [1, 1.1, 1],
+                y: [0, -5, 0],
+                transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' }
+              }}
+            />
+            <HoverPrompt variants={promptVariants} transition={{ ease: 'easeOut' }}>
+              Reveal a secret...
+            </HoverPrompt>
+          </motion.div>
         ) : (
-          <RevealedText
-            key="revealed"
+          <SecretMessage
+            key="secret-message"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            {poemChars.map((char, index) => (
-              <motion.span key={index} variants={charVariants}>
-                {char}
+            {messageChars.map((char, index) => (
+              <motion.span key={index} variants={charVariants} style={{ display: 'inline-block' }}>
+                {char === ' ' ? '\u00A0' : char}
               </motion.span>
             ))}
-          </RevealedText>
+          </SecretMessage>
         )}
       </AnimatePresence>
-    </FragmentWrapper>
+    </WhisperWrapper>
   );
 };
 

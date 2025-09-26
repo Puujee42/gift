@@ -1,111 +1,130 @@
 import React from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 
-// Keyframes for the glitch effect on the text
-const glitchAnimation = keyframes`
-  0% { transform: translate(0); }
-  20% { transform: translate(-3px, 3px); }
-  40% { transform: translate(-3px, -3px); }
-  60% { transform: translate(3px, 3px); }
-  80% { transform: translate(3px, -3px); }
-  100% { transform: translate(0); }
+// Keyframes for a gentle, magical sparkle effect on the text
+const sparkleAnimation = keyframes`
+  0%, 100% { 
+    opacity: 1; 
+    text-shadow: 0 0 6px #fff, 0 0 12px #FF69B4, 0 0 18px #FF69B4; 
+  }
+  50% { 
+    opacity: 0.9; 
+    text-shadow: 0 0 8px #fff, 0 0 16px #FF1493, 0 0 24px #FF1493; 
+  }
 `;
 
-// A shared style for all corner brackets to avoid repetition
-const CornerBracket = styled(motion.div)`
+// A shared style for all corner decorations, now using an SVG for an elegant flourish
+const CornerDecoration = styled(motion.div)`
   position: fixed;
-  width: 50px;
-  height: 50px;
-  border-style: solid;
-  border-color: ${({ theme }) => theme.colors.glowCyan};
-  opacity: 0.7;
+  width: 60px;
+  height: 60px;
+  
+  // Using a filter for a soft, magical glow
+  filter: drop-shadow(0 0 5px ${({ theme }) => theme.colors.primaryPink || '#FFB6C1'});
 `;
 
-// Individual corner components with their specific border properties
-const TopLeftCorner = styled(CornerBracket)`
+// Individual corner components with specific rotations for the flourish SVG
+const TopLeftCorner = styled(CornerDecoration)`
   top: 20px;
   left: 20px;
-  border-width: 4px 0 0 4px;
 `;
 
-const TopRightCorner = styled(CornerBracket)`
+const TopRightCorner = styled(CornerDecoration)`
   top: 20px;
   right: 20px;
-  border-width: 4px 4px 0 0;
+  transform: rotate(90deg);
 `;
 
-const BottomLeftCorner = styled(CornerBracket)`
+const BottomLeftCorner = styled(CornerDecoration)`
   bottom: 20px;
   left: 20px;
-  border-width: 0 0 4px 4px;
+  transform: rotate(-90deg);
 `;
 
-const BottomRightCorner = styled(CornerBracket)`
+const BottomRightCorner = styled(CornerDecoration)`
   bottom: 20px;
   right: 20px;
-  border-width: 0 4px 4px 0;
+  transform: rotate(180deg);
 `;
 
-// The container for our glitching text
-const GlitchContainer = styled(motion.div)`
+// The container for our sparkling welcome message
+const EnchantedMessage = styled(motion.div)`
   position: fixed;
   bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
-  font-family: ${({ theme }) => theme.fonts.secondary};
-  color: ${({ theme }) => theme.colors.glowCyan};
-  letter-spacing: 3px;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-
-  &::before,
-  &::after {
-    content: 'CONNECTION: SECURE';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${({ theme }) => theme.colors.darkPurple};
-    overflow: hidden;
-  }
-
-  &::before {
-    left: 3px;
-    text-shadow: -2px 0 ${({ theme }) => theme.colors.primaryPink};
-    animation: ${glitchAnimation} 2.5s infinite linear alternate-reverse;
-  }
-
-  &::after {
-    left: -3px;
-    text-shadow: -2px 0 ${({ theme }) => theme.colors.glowCyan};
-    animation: ${glitchAnimation} 3s infinite linear alternate-reverse;
-  }
+  font-family: ${({ theme }) => theme.fonts.secondary || "'Great Vibes', cursive"};
+  color: ${({ theme }) => theme.colors.primaryPink || '#FFC0CB'};
+  letter-spacing: 2px;
+  font-size: 1.5rem; // Slightly larger for better readability
+  text-transform: none; // Changed from uppercase for a softer look
+  animation: ${sparkleAnimation} 2.5s infinite linear;
 `;
 
+// This component provides the elegant, magical frame for the main view.
 const CyberpunkOverlay = () => {
-  // Animation variants for the corners to fade in
-  const cornerVariants = {
+  // Animation variants for the corner containers to fade in
+  const cornerContainerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 0.7, transition: { duration: 1, delay: 1.5 } },
+    visible: { 
+      opacity: 1, 
+      transition: { 
+        duration: 1, 
+        delay: 1.5,
+        when: "beforeChildren" // Ensure container is visible before the path draws
+      } 
+    },
   };
 
-  // Animation variants for the glitch text to fade in
-  const glitchTextVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 1, delay: 2 } },
+  // Animation variant for the SVG path to "draw" itself like magic
+  const pathVariant = {
+    hidden: { pathLength: 0 },
+    visible: { 
+      pathLength: 1, 
+      transition: { 
+        duration: 1.5, 
+        ease: 'easeInOut' 
+      } 
+    },
   };
+
+  // Animation variants for the welcome text to appear gracefully
+  const messageVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1, delay: 2 } },
+  };
+  
+  // Reusable flourish component to avoid repeating the SVG code
+  const Flourish = () => (
+    <motion.svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+        <motion.path
+          d="M 5 50 C 10 20, 20 10, 50 5"
+          stroke="#FFB6C1"
+          strokeWidth="2"
+          strokeLinecap="round"
+          variants={pathVariant}
+        />
+        <motion.path
+          d="M 5 50 C 20 45, 45 20, 50 5"
+          stroke="#FFFFFF"
+          strokeWidth="0.5"
+          strokeLinecap="round"
+          variants={pathVariant}
+        />
+    </motion.svg>
+  );
 
   return (
     <>
-      <TopLeftCorner variants={cornerVariants} initial="hidden" animate="visible" />
-      <TopRightCorner variants={cornerVariants} initial="hidden" animate="visible" />
-      <BottomLeftCorner variants={cornerVariants} initial="hidden" animate="visible" />
-      <BottomRightCorner variants={cornerVariants} initial="hidden" animate="visible" />
-      <GlitchContainer variants={glitchTextVariants} initial="hidden" animate="visible">
-        CONNECTION: SECURE
-      </GlitchContainer>
+      <TopLeftCorner variants={cornerContainerVariants} initial="hidden" animate="visible"><Flourish /></TopLeftCorner>
+      <TopRightCorner variants={cornerContainerVariants} initial="hidden" animate="visible"><Flourish /></TopRightCorner>
+      <BottomLeftCorner variants={cornerContainerVariants} initial="hidden" animate="visible"><Flourish /></BottomLeftCorner>
+      <BottomRightCorner variants={cornerContainerVariants} initial="hidden" animate="visible"><Flourish /></BottomRightCorner>
+      
+      <EnchantedMessage variants={messageVariants} initial="hidden" animate="visible">
+        A Magical Celebration Awaits...
+      </EnchantedMessage>
     </>
   );
 };
