@@ -120,7 +120,6 @@ function App() {
               {/* --- Decorative Elements (Hidden on Mobile) --- */}
               <DesktopOnly>
                 <DataFragment top="35%" left="10%">A fairy tale in modern times,</DataFragment>
-                <DataFragment top="65%" right="20%">Our love's a story in sweet rhymes.</DataFragment>
                 
                 <StarlightMessenger top="10%" left="50%" />
                 <StarlightMessenger top="80%" left="85%" />
