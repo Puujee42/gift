@@ -146,7 +146,7 @@ const CelestialMelodyNexus = ({ onExit }) => {
   };
 
   const words = ["Joy", "Laughter", "Dance", "Sing", "Dream", "Love"];
-  const finalRomanticQuote = "May your life be filled with beautiful music.";
+  const finalRomanticQuote = "May your life be filled with all of them.";
 
   const handleMouseUp = () => {
     setIsHolding(false);

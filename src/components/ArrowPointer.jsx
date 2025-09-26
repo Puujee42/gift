@@ -74,7 +74,7 @@ const ArrowPointer = ({ position, rotation }) => {
       initial="hidden"
       animate={["visible", "bounce"]} // Chain the animations
     >
-      <Text variants={textVariant}>Click for Magic...</Text>
+      <Text variants={textVariant}>Энд дар…</Text>
       <motion.svg width="150" height="100" viewBox="0 0 150 100" fill="none" style={{ overflow: 'visible' }}>
         {/* A magical, swirling path */}
         <motion.path

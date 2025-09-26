@@ -13,6 +13,7 @@ import BirthdayNexus from './components/BirthdayNexus';
 import SakuraNexus from './components/SakuraNexus'; // Themed as "Enchanted Castle Nexus"
 import CelestialMelodyNexus from './components/CelestialMelodyNexus'; // Themed as "Royal Ball Nexus"
 import CrystalWithArrow from './components/CrystalWithArrow'; // Themed with hearts and magical trails
+import GlowingLoveLetter from './components/RomanticMessage';
 
 const AppContainer = styled.div`
   position: relative;
@@ -70,8 +71,8 @@ const MainMessageWrapper = styled.main`
 
 
 const nexusContent = {
-  birthday: { id: 1, message: 'Happy Birthday, Princess! Your special day is as magical as you are.' },
-  sakura: { id: 2, message: 'In the royal garden of my heart, you are the most beautiful bloom.' },
+  birthday: { id: 1, message: '5 нас хүрсэнд нь баяр хүргье💖' },
+  sakura: { id: 2, message: 'Alles Gute zum Geburtstag! Ich hoffe, dein Tag wird so süß wie dein Lächeln.' },
   celestial: { id: 3, message: '' } 
 };
 
@@ -95,7 +96,7 @@ function App() {
             <MainDisplayArea>
               {/* The main title is wrapped to be repositioned on mobile */}
               <MainMessageWrapper>
-                <RomanticMessage />
+                <GlowingLoveLetter />
               </MainMessageWrapper>
 
               {/* --- INTERACTIVE LOCKETS --- */}

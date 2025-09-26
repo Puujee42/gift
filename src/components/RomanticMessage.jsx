@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import { motion } from 'framer-motion';
 import GlowingRose from './GlowingRose'; // Themed as a magical, glowing rose
 
-// ✅ A new, magical keyframe animation to replace the cyberpunk flicker.
+// A magical sparkle animation for romantic elegance
 const sparklingGlowAnimation = keyframes`
   0%, 100% {
     text-shadow:
@@ -23,7 +23,7 @@ const sparklingGlowAnimation = keyframes`
   }
 `;
 
-// This wrapper centers the content perfectly on any device.
+// Wrapper for centering everything beautifully
 const MessageWrapper = styled(motion.div)`
   display: flex;
   flex-direction: column;
@@ -34,28 +34,26 @@ const MessageWrapper = styled(motion.div)`
   padding: 2rem;
 `;
 
-// ✅ The main title, now with a royal, elegant font and the new sparkle animation.
-// The `clamp()` function makes the font size perfectly responsive.
+// Main elegant animated text
 const MainText = styled.h1`
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(3rem, 10vw, 7rem); // Scales beautifully from mobile to desktop
-  font-weight: 500; // A softer weight for an elegant font
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 500;
   color: ${({ theme }) => theme.colors.text || '#FFFFFF'};
   animation: ${sparklingGlowAnimation} 3s linear infinite;
 `;
 
-// ✅ The subtext, updated with a clean, readable font and softer styling.
+// Subtext styled with softness and readability
 const SubText = styled(motion.p)`
-  font-size: clamp(1rem, 3vw, 1.5rem); // Also perfectly responsive
+  font-size: clamp(1rem, 3vw, 1.5rem);
   font-family: ${({ theme }) => theme.fonts.secondary || 'cursive'};
   color: ${({ theme }) => theme.colors.primaryPink || '#FFB6C1'};
   margin-top: 1rem;
   letter-spacing: 0.1rem;
-  text-transform: none; // No longer uppercase for a softer feel
+  text-transform: none;
 `;
 
-const RomanticMessage = () => {
-  // These animation variants work perfectly for the new theme.
+const GlowingLoveLetter = () => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -78,22 +76,22 @@ const RomanticMessage = () => {
       initial="hidden"
       animate="visible"
     >
-      {/* The beautiful GlowingRose component fits perfectly at the top. */}
+      {/* Magical glowing rose at the top */}
       <motion.div variants={childVariants}>
         <GlowingRose />
       </motion.div>
-      
-      {/* ✅ The main title with new, princess-themed text. */}
+
+      {/* Romantic main message */}
       <motion.div variants={childVariants}>
-        <MainText>A Royal Celebration</MainText>
+        <MainText>Төрсөн өдрийн мэнд хүргье</MainText>
       </motion.div>
 
-      {/* ✅ The subtext with a new, enchanting message. */}
-      <SubText variants={childVariants}>
-        For a very special princess
-      </SubText>
+      {/* Beloved’s name with sparkling style */}
+      <motion.div variants={childVariants}>
+        <MainText>Лхамцоод</MainText>
+      </motion.div>
     </MessageWrapper>
   );
 };
 
-export default RomanticMessage;
+export default GlowingLoveLetter;
